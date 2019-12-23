@@ -3,29 +3,22 @@ import time
 start_time = time.time()
 
 def move(n, words, word, n_so_far): #Go thru each letter
-    if word in word_over_three_letters:
+    if word in set_words and word not in good_words:
         good_words.append(word)
     if words == [] or len(word) == 16:
         return
+    l_word = len(word)
     for x in combos_lst[n]:
         if x not in n_so_far:
             y = list(n_so_far)
             y.append(x)
-            move(x, check_let(word, words, len(word)), word + letters[x], y)
-
-
-def check_let(letter, words, n):  #Checks letter if matches in words
-    x = []
-    for word in words:
-        if word[0:n] == letter:
-            x.append(word)
-    return x
+            move(x, [w for w in words if w[:l_word] == word], word + letters[x], y)
 
 with open("dictionary.json") as data:
-    words = json.load(data)
+    o_words = json.load(data)
 
 word_over_three_letters = []
-letters = "ttadsapahunolfbh"
+letters = "sobmeianfpnaehoh"
 letter = letters[0]
 
 combos_lst = [[1, 4, 5],
@@ -45,9 +38,11 @@ combos_lst = [[1, 4, 5],
           [9, 10, 11, 13, 15],
           [10, 11, 14]]
 
-for word in words: #Removes <2 letter words
-    if len(word) > 2 and len(word) < 17:
+for word in o_words: #Removes <2 letter words
+    if len(word) > 3 and len(word) < 17:
         word_over_three_letters.append(word)
+
+set_words = set(word_over_three_letters)
 
 good_words = []
 
