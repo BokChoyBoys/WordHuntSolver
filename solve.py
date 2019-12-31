@@ -1,19 +1,17 @@
 import json
-import time
 
 with open("dictionary.json") as data:
     o_words = json.load(data)
-start_time = time.time()
 
-def anagrams(letters):
+def anagrams(letters, num_letters):
 
     def solve(words, word, n_so_far):
         if word in set_words and word not in good_words:
             good_words.append(word)
-        if words == [] or len(word) == 6:
+        if words == [] or len(word) == num_letters:
             return
         l_word = len(word)
-        for x in range(6):
+        for x in range(num_letters):
             if x not in n_so_far:
                 copy_n_so_far = list(n_so_far)
                 copy_n_so_far.append(x)
@@ -22,7 +20,7 @@ def anagrams(letters):
     good_words = []
     words_to_six = []
     for word in o_words:  # Removes >6 letter words
-        if len(word) > 2 and len(word) < 7:
+        if len(word) > 2 and len(word) < num_letters + 1:
             words_to_six.append(word)
 
     set_words = set(words_to_six)
@@ -30,7 +28,6 @@ def anagrams(letters):
     solve(words_to_six, "", [])
 
     print(sorted(good_words, key=len, reverse=True))
-    print(time.time() - start_time)
 
 def wordhunt(letters):
 
@@ -77,7 +74,10 @@ def wordhunt(letters):
         move(l, word_over_three_letters, letters[l], [l])
         
     print(sorted(good_words, key=len, reverse=True))
-    print(time.time() - start_time)
 
-#wordhunt("rorddmflbceiibae")
-anagrams("eahnsl")
+game = input("Enter game (w for wordhunt and a for anagrams): ")
+word = input("Enter letters: ")
+if game == 'w':
+    wordhunt(word)
+else:
+    anagrams(word, len(word))
